@@ -1,0 +1,32 @@
+{
+  "name": "client-website",
+  "version": "1.0.0",
+  "description": "11ty website with Tailwind CSS v4",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build:css": "npx @tailwindcss/cli -i ./src/assets/css/main.css -o ./_site/assets/css/main.css --minify",
+    "build": "npm run build:css && eleventy",
+    "build:images": "node scripts/optimize-images.js",
+    "build:prod": "NODE_ENV=production npm run build && npm run build:images",
+    "preview": "npm run build:prod && npx serve _site -l 3000",
+    "clean": "rm -rf _site"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-img": "^5.0.0",
+    "@iconify/json": "^2.2.0",
+    "@tailwindcss/cli": "^4.0.0",
+    "html-minifier-terser": "^7.2.0"
+  },
+  "dependencies": {
+    "@11ty/eleventy-fetch": "^5.1.1",
+    "@fontsource/cormorant-garamond": "^5.2.11",
+    "@fontsource/roboto": "^5.2.9",
+    "bible-passage-reference-parser": "^3.1.0",
+    "cheerio": "^1.1.2",
+    "glob": "^13.0.0",
+    "node-ical": "^0.23.1",
+    "rrule": "^2.8.1",
+    "rss-parser": "^3.13.0"
+  }
+}

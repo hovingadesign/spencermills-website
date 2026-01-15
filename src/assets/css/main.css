@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* Local Fonts - Cormorant Garamond */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/cormorant-garamond-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/cormorant-garamond-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/cormorant-garamond-latin-700-normal.woff2') format('woff2');
+}
+
+/* Local Fonts - Roboto */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/assets/fonts/roboto-latin-300-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/roboto-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/roboto-latin-500-normal.woff2') format('woff2');
+}
+
+/*
+ * Tailwind v4 Entry Point
+ *
+ * This file is compiled for production builds only.
+ * During development, the CDN script handles styling.
+ *
+ * Add custom @theme variables and @layer rules below.
+ */
+
+/* Spencer Mills Orthodox Presbyterian Church Brand Theme */
+@theme {
+  /* Brand Colors */
+  --color-spruce: oklch(0.72 0.10 155);
+  --color-navy: oklch(0.30 0.03 220);
+  --color-light-green: oklch(0.88 0.05 150);
+  --color-light-blue: oklch(0.70 0.05 230);
+  --color-off-white: oklch(0.95 0 0);
+  --color-orange: oklch(0.85 0.08 75);
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Roboto', system-ui, sans-serif;
+  --font-weight-light: 300;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-size: 18px; /* Bump base from 16px to 18px - scales all rem units */
+  }
+
+  body {
+    @apply antialiased;
+    font-family: var(--font-body);
+    font-weight: var(--font-weight-light);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+
+  /* Smooth anchor scrolling with offset for sticky headers */
+  :target {
+    scroll-margin-block: 5ex;
+  }
+}

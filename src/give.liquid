@@ -1,0 +1,38 @@
+---
+layout: base.liquid
+title: Give - Spencer Mills Orthodox Presbyterian Church
+description: Support the ministry of Spencer Mills Orthodox Presbyterian Church through online giving.
+---
+
+<!-- Page Header -->
+<section class="py-12 lg:py-16 bg-white border-b border-gray-100">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl text-navy">Give</h1>
+  </div>
+</section>
+
+<!-- Give Information -->
+<section class="py-12 lg:py-16 bg-off-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+    <p class="text-navy/80 leading-relaxed mb-8">
+      Thank you for your generosity in supporting the ministry of Spencer Mills Orthodox Presbyterian Church. Your tithes and offerings help us fulfill our mission to make disciples of Jesus Christ who worship God with great joy.
+    </p>
+
+    <p class="text-navy/80 leading-relaxed mb-8">
+      You may give online securely through Tithe.ly by clicking the button below.
+    </p>
+
+    <!-- External Link Button -->
+    <div class="text-center py-8">
+      <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 bg-spruce text-white px-8 py-4 uppercase tracking-widest text-sm hover:bg-spruce/90 transition-colors">
+        Give Online via Tithe.ly
+        {% icon "lucide:external-link", "size-4" %}
+      </a>
+    </div>
+
+    <p class="text-navy/60 text-sm text-center">
+      You may also give by cash or check during Sunday worship services, or mail your gift to:<br>
+      {{ site.address.street }}, {{ site.address.city }}, {{ site.address.state }} {{ site.address.zip }}
+    </p>
+  </div>
+</section>

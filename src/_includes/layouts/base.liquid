@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta -->
+  <title>{{ title | default: site.title }}</title>
+  <meta name="description" content="{{ description | default: site.description }}">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ title | default: site.title }}">
+  <meta property="og:description" content="{{ description | default: site.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  {% if og_image %}
+  <meta property="og:image" content="{{ site.url }}{{ og_image }}">
+  {% endif %}
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
+
+  <!-- Local Fonts (loaded via CSS in production, inline for dev) -->
+  {% unless eleventy.env.production %}
+  <style>
+    @font-face { font-family: 'Cormorant Garamond'; font-weight: 400; font-display: swap; src: url('/assets/fonts/cormorant-garamond-latin-400-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Cormorant Garamond'; font-weight: 500; font-display: swap; src: url('/assets/fonts/cormorant-garamond-latin-500-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Cormorant Garamond'; font-weight: 600; font-display: swap; src: url('/assets/fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Cormorant Garamond'; font-weight: 700; font-display: swap; src: url('/assets/fonts/cormorant-garamond-latin-700-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Roboto'; font-weight: 300; font-display: swap; src: url('/assets/fonts/roboto-latin-300-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Roboto'; font-weight: 400; font-display: swap; src: url('/assets/fonts/roboto-latin-400-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Roboto'; font-weight: 500; font-display: swap; src: url('/assets/fonts/roboto-latin-500-normal.woff2') format('woff2'); }
+  </style>
+  {% endunless %}
+
+  <!-- Base Font Size -->
+  <style>html { font-size: 18px; }</style>
+
+  <!-- Tailwind CSS -->
+  {% if eleventy.env.production %}
+  <link rel="stylesheet" href="/assets/css/main.css">
+  {% else %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'spruce': '#57bd84',
+            'navy': '#2c404d',
+            'light-green': '#c0e2ca',
+            'light-blue': '#88b3cc',
+            'off-white': '#f1f1f1',
+            'orange': '#f1d5a2'
+          },
+          fontFamily: {
+            'display': ['Cormorant Garamond', 'Georgia', 'serif'],
+            'body': ['Roboto', 'system-ui', 'sans-serif']
+          },
+          fontWeight: {
+            'light': 300
+          }
+        }
+      }
+    }
+  </script>
+  {% endif %}
+</head>
+
+<body class="min-h-screen bg-off-white font-body font-light text-navy{% if body_class %} {{ body_class }}{% endif %}">
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-1/2 focus:-translate-x-1/2 focus:bg-white focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:z-50">
+    Skip to main content
+  </a>
+
+  <!-- SVG Icon Definitions -->
+  {% iconSymbols %}
+
+  <!-- Header -->
+  {% include "header.liquid" %}
+
+  <!-- Main Content -->
+  <main id="main">
+    {{ content }}
+  </main>
+
+  <!-- Footer -->
+  {% include "footer.liquid" %}
+</body>
+</html>

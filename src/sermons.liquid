@@ -1,0 +1,298 @@
+---
+layout: base.liquid
+title: Sermons - Spencer Mills Orthodox Presbyterian Church
+description: Listen to past sermons from our pastor and guest speakers at Spencer Mills Orthodox Presbyterian Church.
+---
+
+<!-- Page Header -->
+<section class="py-12 lg:py-16 bg-white border-b border-gray-100">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl text-navy">Sermons</h1>
+  </div>
+</section>
+
+<!-- Sermon Archive Section -->
+<section class="py-12 lg:py-16 bg-off-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+    <p class="text-navy/80 leading-relaxed mb-8">
+      Listen to past sermons from our pastor and guest speakers. Use the filters below to search by speaker, Scripture passage, or year.
+    </p>
+
+    {% if sermons.items.size > 0 %}
+    <!-- Filters -->
+    <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Search -->
+        <div>
+          <label for="sermon-search" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Search</label>
+          <input
+            type="text"
+            id="sermon-search"
+            placeholder="Search sermons..."
+            class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors text-sm"
+          >
+        </div>
+
+        <!-- Speaker Filter -->
+        <div>
+          <label for="filter-speaker" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Speaker</label>
+          <select id="filter-speaker" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-navy focus:outline-none focus:border-spruce transition-colors text-sm">
+            <option value="">All Speakers</option>
+            {% for speaker in sermons.meta.speakers %}
+            <option value="{{ speaker }}">{{ speaker }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Scripture Filter -->
+        <div>
+          <label for="filter-book" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Scripture</label>
+          <select id="filter-book" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-navy focus:outline-none focus:border-spruce transition-colors text-sm">
+            <option value="">All Books</option>
+            {% for book in sermons.meta.books %}
+            <option value="{{ book }}">{{ book }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Year Filter -->
+        <div>
+          <label for="filter-year" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Year</label>
+          <select id="filter-year" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-navy focus:outline-none focus:border-spruce transition-colors text-sm">
+            <option value="">All Years</option>
+            {% for year in sermons.meta.years %}
+            <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- Results count and clear -->
+      <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+        <p class="text-sm text-navy/60">
+          <span id="sermon-count">{{ sermons.items.size }}</span> sermons
+        </p>
+        <button id="clear-filters" class="text-sm text-spruce hover:underline hidden">
+          Clear filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Sermon List -->
+    <div id="sermon-list" class="space-y-4">
+      {% for sermon in sermons.items %}
+      <article
+        class="sermon-item bg-white rounded-lg shadow-sm overflow-hidden transition-shadow hover:shadow-md"
+        data-speaker="{{ sermon.speaker }}"
+        data-book="{{ sermon.book }}"
+        data-year="{{ sermon.year }}"
+        data-title="{{ sermon.title | downcase }}"
+        data-scripture="{{ sermon.scriptureNormalized | downcase }}"
+      >
+        <div class="p-4 sm:p-6">
+          <!-- Sermon Header -->
+          <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+            <div class="flex-1 min-w-0">
+              <h2 class="font-display text-xl sm:text-2xl text-navy truncate">{{ sermon.title }}</h2>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-navy/70">
+                <span>{{ sermon.speaker }}</span>
+                {% if sermon.scriptureNormalized != "" %}
+                <span class="text-spruce">{{ sermon.scriptureNormalized }}</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="text-sm text-navy/50 whitespace-nowrap">
+              {{ sermon.dateFormatted }}
+            </div>
+          </div>
+
+          <!-- Audio Player (loaded dynamically) -->
+          {% if sermon.audioUrl != "" %}
+          <div class="sermon-audio mt-4">
+            <button
+              type="button"
+              class="listen-btn inline-flex items-center gap-2 bg-spruce text-white px-4 py-2 text-sm uppercase tracking-widest hover:bg-spruce/90 transition-colors"
+              data-audio-url="{{ sermon.audioUrl }}"
+            >
+              {% icon "lucide:play", "size-4" %}
+              Listen Now
+            </button>
+            <div class="audio-container hidden"></div>
+          </div>
+          {% endif %}
+
+          <!-- Sermon Meta -->
+          <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+            {% if sermon.duration != "" %}
+            <span class="text-xs text-navy/50">
+              {% icon "lucide:clock", "inline size-3 mr-1" %}
+              {{ sermon.duration }}
+            </span>
+            {% else %}
+            <span></span>
+            {% endif %}
+
+            {% if sermon.link != "" %}
+            <a
+              href="{{ sermon.link }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs text-spruce hover:underline inline-flex items-center gap-1"
+            >
+              View on SermonAudio
+              {% icon "lucide:external-link", "size-3" %}
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <!-- No Results Message -->
+    <div id="no-results" class="hidden bg-white rounded-lg shadow-sm p-8 text-center">
+      <div class="text-navy/30 mb-4">
+        {% icon "lucide:search-x", "size-12 mx-auto" %}
+      </div>
+      <p class="text-navy/60">No sermons match your filters. Try adjusting your search criteria.</p>
+    </div>
+
+    {% else %}
+    <!-- No Sermons Available -->
+    <div class="bg-white rounded-lg shadow-sm p-8 lg:p-12">
+      <div class="text-center">
+        <div class="text-navy/30 mb-6">
+          {% icon "lucide:headphones", "size-16 mx-auto" %}
+        </div>
+        <h2 class="font-display text-2xl text-navy mb-4">Sermons Coming Soon</h2>
+        <p class="text-navy/60 mb-6">
+          Our sermon archive is being set up. Check back soon to listen to past messages.
+        </p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if sermons.items.size > 0 %}
+<!-- Filtering and Audio Player Script -->
+<script>
+(function() {
+  // --- Filtering ---
+  const searchInput = document.getElementById('sermon-search');
+  const speakerFilter = document.getElementById('filter-speaker');
+  const bookFilter = document.getElementById('filter-book');
+  const yearFilter = document.getElementById('filter-year');
+  const clearButton = document.getElementById('clear-filters');
+  const sermonCount = document.getElementById('sermon-count');
+  const sermonList = document.getElementById('sermon-list');
+  const noResults = document.getElementById('no-results');
+  const sermonItems = document.querySelectorAll('.sermon-item');
+
+  function filterSermons() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const speaker = speakerFilter.value;
+    const book = bookFilter.value;
+    const year = yearFilter.value;
+
+    let visibleCount = 0;
+    const hasFilters = searchTerm || speaker || book || year;
+
+    sermonItems.forEach(item => {
+      const itemSpeaker = item.dataset.speaker;
+      const itemBook = item.dataset.book;
+      const itemYear = item.dataset.year;
+      const itemTitle = item.dataset.title;
+      const itemScripture = item.dataset.scripture;
+
+      const matchesSpeaker = !speaker || itemSpeaker === speaker;
+      const matchesBook = !book || itemBook === book;
+      const matchesYear = !year || itemYear === year;
+      const matchesSearch = !searchTerm ||
+        itemTitle.includes(searchTerm) ||
+        itemScripture.includes(searchTerm) ||
+        itemSpeaker.toLowerCase().includes(searchTerm);
+
+      if (matchesSpeaker && matchesBook && matchesYear && matchesSearch) {
+        item.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    sermonCount.textContent = visibleCount;
+    clearButton.classList.toggle('hidden', !hasFilters);
+    noResults.classList.toggle('hidden', visibleCount > 0);
+    sermonList.classList.toggle('hidden', visibleCount === 0);
+  }
+
+  function clearFilters() {
+    searchInput.value = '';
+    speakerFilter.value = '';
+    bookFilter.value = '';
+    yearFilter.value = '';
+    filterSermons();
+  }
+
+  searchInput.addEventListener('input', filterSermons);
+  speakerFilter.addEventListener('change', filterSermons);
+  bookFilter.addEventListener('change', filterSermons);
+  yearFilter.addEventListener('change', filterSermons);
+  clearButton.addEventListener('click', clearFilters);
+
+  // --- Dynamic Audio Player ---
+  let currentlyPlaying = null;
+
+  document.querySelectorAll('.listen-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const audioUrl = this.dataset.audioUrl;
+      const container = this.nextElementSibling;
+
+      // Pause any currently playing audio
+      if (currentlyPlaying && currentlyPlaying !== container) {
+        const prevAudio = currentlyPlaying.querySelector('audio');
+        if (prevAudio) prevAudio.pause();
+      }
+
+      // If already loaded, just show/toggle
+      if (container.querySelector('audio')) {
+        container.classList.remove('hidden');
+        this.classList.add('hidden');
+        const audio = container.querySelector('audio');
+        audio.play();
+        currentlyPlaying = container;
+        return;
+      }
+
+      // Create audio element
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.preload = 'auto';
+      audio.className = 'w-full h-10';
+      audio.style.borderRadius = '8px';
+      audio.innerHTML = '<source src="' + audioUrl + '" type="audio/mpeg">Your browser does not support audio.';
+
+      // Add close button
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'text-navy/50 hover:text-navy text-xs mt-2 flex items-center gap-1';
+      closeBtn.innerHTML = '<svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> Close player';
+      closeBtn.addEventListener('click', () => {
+        audio.pause();
+        container.classList.add('hidden');
+        btn.classList.remove('hidden');
+      });
+
+      container.appendChild(audio);
+      container.appendChild(closeBtn);
+      container.classList.remove('hidden');
+      this.classList.add('hidden');
+
+      audio.play();
+      currentlyPlaying = container;
+    });
+  });
+})();
+</script>
+{% endif %}

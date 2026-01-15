@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+_site/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.cache/
+.icon-cache.json

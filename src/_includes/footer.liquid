@@ -1,0 +1,30 @@
+<footer class="bg-navy text-white py-12 mt-auto">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      <!-- Logo -->
+      <div class="flex justify-center md:justify-start">
+        <img src="/assets/images/logos/SpencerMills_Logo.svg" alt="Spencer Mills OPC" class="h-16 w-auto">
+      </div>
+
+      <!-- Contact Info (Centered) -->
+      <div class="text-center">
+        <h3 class="font-display text-2xl text-orange mb-4">Thank you for visiting.</h3>
+        <p class="text-white/80 text-sm">
+          {{ site.title }}<br>
+          {{ site.address.street }}, {{ site.address.city }}, {{ site.address.state }} {{ site.address.zip }}<br>
+          <a href="tel:{{ site.phone | remove: '.' }}" class="hover:text-white transition-colors">{{ site.phone }}</a>
+        </p>
+      </div>
+
+      <!-- Connect With Us -->
+      <div class="text-center md:text-right">
+        <h3 class="font-display text-xl text-orange mb-4">Connect With Us</h3>
+        <a href="{{ site.social.facebook }}" target="_blank" rel="noopener noreferrer" class="inline-block text-white/80 hover:text-white transition-colors" aria-label="Facebook">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 3.667h-3.533v7.98H9.101z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
