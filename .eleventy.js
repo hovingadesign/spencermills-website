@@ -9,10 +9,14 @@
  * CSS is handled by Tailwind CLI (see package.json scripts)
  */
 
-const Image = require("@11ty/eleventy-img");
-const { minify: htmlMinify } = require('html-minifier-terser');
-const path = require('path');
-const fs = require('fs');
+import Image from "@11ty/eleventy-img";
+import { minify as htmlMinify } from 'html-minifier-terser';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ============================================
 // ICONIFY ICON COLLECTOR
@@ -98,8 +102,15 @@ ${symbols.join('\n')}
   }
 };
 
-module.exports = function(eleventyConfig) {
+export default function(eleventyConfig) {
   const isProd = process.env.NODE_ENV === 'production';
+
+  // Make production flag available in templates
+  eleventyConfig.addGlobalData('eleventy', {
+    env: {
+      production: isProd
+    }
+  });
 
   // Reset icon collector on each build
   eleventyConfig.on('eleventy.before', () => {

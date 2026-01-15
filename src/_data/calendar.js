@@ -1,7 +1,8 @@
-const ical = require('node-ical');
-const { RRule } = require('rrule');
+import ical from 'node-ical';
+import rrule from 'rrule';
+const { RRule } = rrule;
 
-module.exports = async function() {
+export default async function() {
   const CALENDAR_ICS_URL = 'https://outlook.office365.com/owa/calendar/7968b2c0fc1749959aa5c1ff78db8e87@lfcopc.org/68138daf3a834607ae3394f3497a07fa4237023610457132402/calendar.ics';
 
   try {

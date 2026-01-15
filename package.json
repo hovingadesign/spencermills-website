@@ -1,6 +1,7 @@
 {
   "name": "client-website",
   "version": "1.0.0",
+  "type": "module",
   "description": "11ty website with Tailwind CSS v4",
   "scripts": {
     "dev": "eleventy --serve",

@@ -11,11 +11,15 @@
  * - Maintains all original attributes (class, alt, etc.)
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const { glob } = require('glob');
-const cheerio = require('cheerio');
-const Image = require('@11ty/eleventy-img');
+import fs from 'fs/promises';
+import path from 'path';
+import { glob } from 'glob';
+import * as cheerio from 'cheerio';
+import Image from '@11ty/eleventy-img';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configuration
 const SITE_DIR = '_site';
@@ -225,11 +229,11 @@ async function main() {
 }
 
 // Run if called directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(error => {
     console.error('❌ Error:', error);
     process.exit(1);
   });
 }
 
-module.exports = { main };
+export { main };

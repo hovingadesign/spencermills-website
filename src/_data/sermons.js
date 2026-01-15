@@ -7,8 +7,8 @@
  * Configure the feed URL below for your church's podcast feed.
  */
 
-const EleventyFetch = require("@11ty/eleventy-fetch");
-const Parser = require("rss-parser");
+import EleventyFetch from "@11ty/eleventy-fetch";
+import Parser from "rss-parser";
 
 // Configure your sermon feed URL here
 // SermonAudio format: https://feed.sermonaudio.com/broadcasters/YOUR_ID
@@ -200,7 +200,7 @@ function formatDate(dateStr) {
   });
 }
 
-module.exports = async function () {
+export default async function () {
   // Configure the RSS parser with iTunes namespace fields
   const parser = new Parser({
     customFields: {
