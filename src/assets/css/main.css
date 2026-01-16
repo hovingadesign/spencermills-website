@@ -65,7 +65,7 @@
 /* Spencer Mills Orthodox Presbyterian Church Brand Theme */
 @theme {
   /* Brand Colors */
-  --color-spruce: oklch(0.72 0.10 155);
+  --color-spruce: oklch(0.72 0.15 155);
   --color-navy: oklch(0.30 0.03 220);
   --color-light-green: oklch(0.88 0.05 150);
   --color-light-blue: oklch(0.70 0.05 230);
@@ -93,6 +93,10 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+  }
+
+  h1 {
+    @apply text-spruce font-semibold;
   }
 
   /* Smooth anchor scrolling with offset for sticky headers */

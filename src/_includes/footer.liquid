@@ -1,27 +1,31 @@
-<footer class="bg-navy text-white py-12 mt-auto">
+<footer class="bg-spruce text-navy py-12 mt-auto">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
       <!-- Logo -->
       <div class="flex justify-center md:justify-start">
-        <img src="/assets/images/logos/SpencerMills_Logo.svg" alt="Spencer Mills OPC" class="h-16 w-auto">
+        <img src="/assets/images/logos/SpencerMills_Logo_WhiteOutline_NavyText.svg" alt="Spencer Mills OPC" class="h-16 w-auto">
       </div>
 
       <!-- Contact Info (Centered) -->
       <div class="text-center">
-        <h3 class="font-display text-2xl text-orange mb-4">Thank you for visiting.</h3>
-        <p class="text-white/80 text-sm">
+        <h3 class="font-display text-2xl text-navy mb-4">Thank you for visiting.</h3>
+        <p class="text-navy text-sm">
           {{ site.title }}<br>
           {{ site.address.street }}, {{ site.address.city }}, {{ site.address.state }} {{ site.address.zip }}<br>
-          <a href="tel:{{ site.phone | remove: '.' }}" class="hover:text-white transition-colors">{{ site.phone }}</a>
+          <a href="tel:{{ site.phone | remove: '.' }}" class="hover:text-navy/70 transition-colors">{{ site.phone }}</a>
         </p>
       </div>
 
-      <!-- Connect With Us -->
-      <div class="text-center md:text-right">
-        <h3 class="font-display text-xl text-orange mb-4">Connect With Us</h3>
-        <a href="{{ site.social.facebook }}" target="_blank" rel="noopener noreferrer" class="inline-block text-white/80 hover:text-white transition-colors" aria-label="Facebook">
-          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <!-- Social Media -->
+      <div class="text-center md:text-right flex items-center justify-center md:justify-end gap-4">
+        <a href="{{ site.social.facebook }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center flex-shrink-0 text-navy hover:text-navy/70 transition-colors" style="line-height: 1;" aria-label="Facebook">
+          <svg class="w-8 h-8 block" fill="currentColor" viewBox="0 0 24 24" style="display: flex;" aria-hidden="true">
             <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 3.667h-3.533v7.98H9.101z"/>
+          </svg>
+        </a>
+        <a href="https://www.youtube.com/@SpencerMillsChurch" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center flex-shrink-0 text-navy hover:text-navy/70 transition-colors" style="line-height: 1;" aria-label="YouTube">
+          <svg class="w-8 h-8 block" fill="currentColor" viewBox="0 0 24 24" style="display: flex;" aria-hidden="true">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
           </svg>
         </a>
       </div>

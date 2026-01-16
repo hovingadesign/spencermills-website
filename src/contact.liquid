@@ -7,11 +7,11 @@ description: Get in touch with Spencer Mills Orthodox Presbyterian Church. We'd 
 <!-- Page Header -->
 <section class="py-12 lg:py-16 bg-white border-b border-gray-100">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl text-navy">Contact Us</h1>
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl">Contact Us</h1>
   </div>
 </section>
 
-<!-- Contact Information & Form -->
+<!-- Contact Information -->
 <section class="py-12 lg:py-16 bg-off-white">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
     <p class="text-navy/80 leading-relaxed mb-8">
@@ -19,7 +19,7 @@ description: Get in touch with Spencer Mills Orthodox Presbyterian Church. We'd 
     </p>
 
     <!-- Contact Details -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div class="flex items-start gap-4">
         <div class="text-spruce">
           {% icon "lucide:phone", "size-6" %}
@@ -43,32 +43,39 @@ description: Get in touch with Spencer Mills Orthodox Presbyterian Church. We'd 
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- Contact Form -->
-    <div class="bg-white rounded-lg shadow-sm p-8 lg:p-10">
-      <form class="space-y-5">
-        <div>
-          <label for="contact-name" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Name*</label>
-          <input type="text" id="contact-name" name="name" required placeholder="enter your name" class="w-full px-4 py-3 border border-gray-300 rounded bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
-        </div>
-        <div>
-          <label for="contact-email" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Email*</label>
-          <input type="email" id="contact-email" name="email" required placeholder="enter your email address" class="w-full px-4 py-3 border border-gray-300 rounded bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
-        </div>
-        <div>
-          <label for="contact-subject" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Subject*</label>
-          <input type="text" id="contact-subject" name="subject" required placeholder="enter the subject of your message" class="w-full px-4 py-3 border border-gray-300 rounded bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
-        </div>
-        <div>
-          <label for="contact-message" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Message</label>
-          <textarea id="contact-message" name="message" rows="6" placeholder="how can we help?" class="w-full px-4 py-3 border border-gray-300 rounded bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors resize-y"></textarea>
-        </div>
-        <div class="text-center pt-4">
-          <button type="submit" class="bg-spruce text-white px-10 py-3 uppercase tracking-widest text-sm hover:bg-spruce/90 transition-colors">
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
+<!-- Contact Form -->
+<section class="py-16 lg:py-24 bg-navy">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
+    <h2 class="font-display text-3xl text-white mb-4">Send Us a Message</h2>
+    <p class="text-white/80 mb-8">
+      Fill out the form below and we'll be in touch.
+    </p>
+
+    <form class="space-y-4">
+      <div>
+        <label for="contact-name" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Name*</label>
+        <input type="text" id="contact-name" name="name" required placeholder="enter your name" class="w-full px-4 py-3 border border-white/30 rounded bg-navy text-white placeholder-white/40 focus:outline-none focus:border-spruce transition-colors">
+      </div>
+      <div>
+        <label for="contact-email" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Email*</label>
+        <input type="email" id="contact-email" name="email" required placeholder="enter your email address" class="w-full px-4 py-3 border border-white/30 rounded bg-navy text-white placeholder-white/40 focus:outline-none focus:border-spruce transition-colors">
+      </div>
+      <div>
+        <label for="contact-subject" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Subject*</label>
+        <input type="text" id="contact-subject" name="subject" required placeholder="enter the subject of your message" class="w-full px-4 py-3 border border-white/30 rounded bg-navy text-white placeholder-white/40 focus:outline-none focus:border-spruce transition-colors">
+      </div>
+      <div>
+        <label for="contact-message" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Message</label>
+        <textarea id="contact-message" name="message" rows="6" placeholder="how can we help?" class="w-full px-4 py-3 border border-white/30 rounded bg-navy text-white placeholder-white/40 focus:outline-none focus:border-spruce transition-colors resize-y"></textarea>
+      </div>
+      <div class="text-center pt-4">
+        <button type="submit" class="bg-spruce text-white px-10 py-3 uppercase tracking-widest text-sm hover:bg-spruce/90 transition-colors">
+          Submit
+        </button>
+      </div>
+    </form>
   </div>
 </section>
