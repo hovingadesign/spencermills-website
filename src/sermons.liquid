@@ -20,7 +20,7 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
 
     {% if sermons.items.size > 0 %}
     <!-- Filters -->
-    <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-8">
+    <div class="bg-white shadow-sm p-4 sm:p-6 mb-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Search -->
         <div>
@@ -82,7 +82,7 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
     <div id="sermon-list" class="space-y-4">
       {% for sermon in sermons.items %}
       <article
-        class="sermon-item bg-white rounded-lg shadow-sm overflow-hidden transition-shadow hover:shadow-md"
+        class="sermon-item bg-white shadow-sm overflow-hidden transition-shadow hover:shadow-md"
         data-speaker="{{ sermon.speaker }}"
         data-book="{{ sermon.book }}"
         data-year="{{ sermon.year }}"
@@ -150,7 +150,7 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
     </div>
 
     <!-- No Results Message -->
-    <div id="no-results" class="hidden bg-white rounded-lg shadow-sm p-8 text-center">
+    <div id="no-results" class="hidden bg-white shadow-sm p-8 text-center">
       <div class="text-navy/30 mb-4">
         {% icon "lucide:search-x", "size-12 mx-auto" %}
       </div>
@@ -159,7 +159,7 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
 
     {% else %}
     <!-- No Sermons Available -->
-    <div class="bg-white rounded-lg shadow-sm p-8 lg:p-12">
+    <div class="bg-white shadow-sm p-8 lg:p-12">
       <div class="text-center">
         <div class="text-navy/30 mb-6">
           {% icon "lucide:headphones", "size-16 mx-auto" %}
