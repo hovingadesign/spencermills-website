@@ -1,0 +1,84 @@
+---
+layout: base.liquid
+title: Visitor Information Card - Spencer Mills Orthodox Presbyterian Church
+description: Thank you for worshiping with us! We'd love the opportunity to serve you.
+permalink: /visitor/
+---
+
+<!-- Page Header -->
+<section class="py-12 lg:py-16 bg-white border-b border-gray-100">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl">Visitor Information Card</h1>
+  </div>
+</section>
+
+<!-- Visitor Information Form -->
+<section class="py-16 lg:py-24 bg-navy">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
+    <p class="text-white/80 mb-8 leading-relaxed">
+      Thank you for worshiping with us today! We'd love the opportunity to serve you. If you would like someone from the church to reach out, please fill out the form below.
+    </p>
+
+    <form action="https://usebasin.com/f/0005e9d126f3" method="POST" class="space-y-4">
+      <!-- Name Section (2 columns on desktop) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="visitor-first-name" class="block text-xs uppercase tracking-widest text-white/70 mb-1">First Name*</label>
+          <input type="text" id="visitor-first-name" name="first_name" required placeholder="enter your first name" class="w-full px-4 py-3 border border-white/30 bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
+        </div>
+        <div>
+          <label for="visitor-last-name" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Last Name*</label>
+          <input type="text" id="visitor-last-name" name="last_name" required placeholder="enter your last name" class="w-full px-4 py-3 border border-white/30 bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="visitor-email" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Email*</label>
+        <input type="email" id="visitor-email" name="email" required placeholder="enter your email address" class="w-full px-4 py-3 border border-white/30 bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label for="visitor-phone" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Phone</label>
+        <input type="tel" id="visitor-phone" name="phone" placeholder="enter your phone number" class="w-full px-4 py-3 border border-white/30 bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
+      </div>
+
+      <!-- Interests Checkboxes -->
+      <div>
+        <label class="block text-xs uppercase tracking-widest text-white/70 mb-3">I am interested in:</label>
+        <div class="bg-white/5 border border-white/20 px-4 py-4 space-y-3">
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="interest-learn" name="interests[]" value="Learning more about Spencer Mills OPC" class="mt-1 size-4 accent-spruce cursor-pointer">
+            <label for="interest-learn" class="text-white/90 cursor-pointer">Learning more about Spencer Mills OPC</label>
+          </div>
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="interest-christian" name="interests[]" value="Becoming a Christian" class="mt-1 size-4 accent-spruce cursor-pointer">
+            <label for="interest-christian" class="text-white/90 cursor-pointer">Becoming a Christian</label>
+          </div>
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="interest-visit" name="interests[]" value="A pastoral visit" class="mt-1 size-4 accent-spruce cursor-pointer">
+            <label for="interest-visit" class="text-white/90 cursor-pointer">A pastoral visit</label>
+          </div>
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="interest-prayer" name="interests[]" value="Prayer request" class="mt-1 size-4 accent-spruce cursor-pointer">
+            <label for="interest-prayer" class="text-white/90 cursor-pointer">Prayer request</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Info -->
+      <div>
+        <label for="visitor-message" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Additional Information</label>
+        <textarea id="visitor-message" name="message" rows="6" placeholder="Any additional comments or prayer requests..." class="w-full px-4 py-3 border border-white/30 bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors resize-y"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center pt-4">
+        <button type="submit" class="bg-spruce text-white px-10 py-3 uppercase tracking-widest text-sm hover:bg-spruce/90 transition-colors">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
