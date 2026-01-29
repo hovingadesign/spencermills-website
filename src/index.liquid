@@ -14,7 +14,7 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
 
   <!-- Hero Content -->
   <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8 py-20">
-    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white mb-4">Worship at Spencer Mills</h1>
+    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white mb-4">Worship at<br class="sm:hidden"> Spencer Mills</h1>
     <p class="font-display text-xl sm:text-2xl text-light-green italic mb-6">Glorifying and Enjoying God Together.</p>
     <p class="text-white/90 text-lg mb-8">Please join us for Sunday services at {{ site.services.morning }} and {{ site.services.evening }}.</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -51,15 +51,25 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
       <!-- Column 1: Listen -->
       <div>
-        <img src="/assets/images/SpencerMIlls_Sanctuary.jpg" alt="Sermon Archive" class="w-full aspect-video object-cover mb-6">
+        <!-- YouTube Video Thumbnail with Play Button -->
+        <button id="video-trigger" class="relative w-full aspect-video mb-6 group cursor-pointer overflow-hidden">
+          <img src="https://img.youtube.com/vi/MrDDy0_0wM4/hqdefault.jpg" alt="Watch our latest sermon" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://img.youtube.com/vi/MrDDy0_0wM4/sddefault.jpg'">
+          <!-- Play Button -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-16 h-16 sm:w-20 sm:h-20 text-white drop-shadow-lg transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </button>
         <h2 class="font-display text-3xl text-navy mb-4">Listen</h2>
         <p class="text-navy/80 leading-relaxed mb-6">
           Hear past sermons from our pastor and guest speakers in our Sermon Archive.
         </p>
-        <a href="/sermons/" class="inline-flex items-center gap-2 text-spruce uppercase tracking-widest text-sm hover:underline transition-colors group">
+        <p class="text-navy/60 text-sm italic">Coming soon</p>
+        <!-- <a href="/sermons/" class="inline-flex items-center gap-2 text-spruce uppercase tracking-widest text-sm hover:underline transition-colors group">
           Sermons
           <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
-        </a>
+        </a> -->
       </div>
 
       <!-- Column 2: Church Life -->
@@ -78,6 +88,11 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
       <!-- Column 3: Calendar Widget -->
       <div class="bg-white p-6 shadow-sm h-fit">
         <h3 class="font-display text-xl text-navy mb-4">Upcoming Events</h3>
+
+        <!-- Calendar integration coming soon -->
+        <p class="text-navy/60 text-sm italic">Coming soon</p>
+
+        <!--
         <p class="text-sm text-navy/60 mb-4">Next 7 days</p>
 
         {% if calendar.size > 0 %}
@@ -101,6 +116,7 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
         <div class="mt-6 pt-4 border-t border-gray-100">
           <a href="https://outlook.office365.com/owa/calendar/7968b2c0fc1749959aa5c1ff78db8e87@lfcopc.org/68138daf3a834607ae3394f3497a07fa4237023610457132402/calendar.html" target="_blank" rel="noopener noreferrer" class="text-spruce text-sm hover:underline">View Full Calendar</a>
         </div>
+        -->
       </div>
     </div>
   </div>
@@ -137,7 +153,7 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
     </p>
 
     <!-- Contact Form -->
-    <form class="space-y-4">
+    <form action="https://usebasin.com/f/4221c9a93bcd" method="POST" class="space-y-4">
       <div>
         <label for="name" class="block text-xs uppercase tracking-widest text-white/70 mb-1">Name*</label>
         <input type="text" id="name" name="name" required placeholder="enter your name" class="w-full px-4 py-3 border border-white/30 bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors">
@@ -162,3 +178,69 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
     </form>
   </div>
 </section>
+
+<!-- Video Modal -->
+<div id="video-modal" class="fixed inset-0 z-[100] hidden">
+  <!-- Backdrop -->
+  <div id="video-backdrop" class="absolute inset-0 bg-navy/90 backdrop-blur-sm"></div>
+
+  <!-- Modal Content -->
+  <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-8">
+    <div class="relative w-full max-w-4xl">
+      <!-- Close Button -->
+      <button id="video-close" class="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors flex items-center gap-2 text-sm uppercase tracking-widest">
+        Close
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <!-- Video Container -->
+      <div class="aspect-video bg-black shadow-2xl">
+        <iframe
+          id="video-iframe"
+          class="w-full h-full"
+          src=""
+          title="Spencer Mills Church Video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Video Modal Script -->
+<script>
+  (function() {
+    const trigger = document.getElementById('video-trigger');
+    const modal = document.getElementById('video-modal');
+    const backdrop = document.getElementById('video-backdrop');
+    const closeBtn = document.getElementById('video-close');
+    const iframe = document.getElementById('video-iframe');
+    const videoUrl = 'https://www.youtube.com/embed/MrDDy0_0wM4?autoplay=1&rel=0';
+
+    function openModal() {
+      iframe.src = videoUrl;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      iframe.src = '';
+      document.body.style.overflow = '';
+    }
+
+    trigger.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+  })();
+</script>

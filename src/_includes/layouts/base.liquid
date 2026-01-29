@@ -77,6 +77,9 @@
   <!-- SVG Icon Definitions -->
   {% iconSymbols %}
 
+  <!-- Notification Bar (populated by JS) -->
+  <div id="notification-bar"></div>
+
   <!-- Header -->
   {% include "header.liquid" %}
 
@@ -87,5 +90,30 @@
 
   <!-- Footer -->
   {% include "footer.liquid" %}
+
+  <!-- Notification Bar Script -->
+  <script>
+    (function() {
+      const container = document.getElementById('notification-bar');
+
+      fetch('/notification.json')
+        .then(res => res.json())
+        .then(data => {
+          if (!data.enabled || !data.message) return;
+
+          let linkHtml = '';
+          if (data.link && data.linkText) {
+            linkHtml = `<a href="${data.link}" class="underline underline-offset-2 hover:no-underline ml-1">${data.linkText}</a>`;
+          }
+
+          container.innerHTML = `
+            <div class="bg-spruce text-white text-sm py-2 px-4">
+              <p class="text-center">${data.message}${linkHtml}</p>
+            </div>
+          `;
+        })
+        .catch(() => {});
+    })();
+  </script>
 </body>
 </html>
