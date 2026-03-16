@@ -21,7 +21,8 @@ This is an 11ty (Eleventy) static site with Tailwind CSS v4 using **ES modules**
 2. **Responsive Images**: Automatic next-gen optimization (AVIF/WebP/JPEG) across 4 breakpoints (400w-1600w)
 3. **Dynamic Audio Players**: Lazy-loaded audio elements that initialize on button click
 4. **Self-Hosted Assets**: All fonts and images served locally (no external CDN)
-5. **Church Calendar**: 7-day event lookahead from ICS feed
+5. **Church Calendar**: 21-day event lookahead from Outlook 365 ICS feed (displays next 4 events)
+6. **CI/CD**: GitHub Actions pipeline with scheduled daily rebuilds for fresh calendar data
 
 ## ES Modules Configuration
 
@@ -43,7 +44,7 @@ tailwind.config.js           # Tailwind v4 content paths for CSS purging
 src/
 ├── _data/
 │   ├── sermons.js           # RSS feed ingestion, scripture normalization, filtering data
-│   ├── calendar.js          # ICS calendar with 7-day lookahead
+│   ├── calendar.js          # Outlook 365 ICS calendar (21-day lookahead, max 4 events)
 │   └── site.js              # Global configuration
 ├── _includes/
 │   └── header.liquid        # Navigation header with inline SVG hamburger
@@ -58,12 +59,16 @@ src/
 scripts/
 └── optimize-images.js       # Post-build image processing script
 
-_site/                        # Build output (INCLUDED in git)
+_site/                        # Build output (in git, built by GitHub Actions)
 ├── assets/
 │   ├── css/main.css         # Minified Tailwind CSS
 │   ├── fonts/               # Self-hosted WOFF2 files
 │   └── images/optimized/    # Generated responsive images (4 sizes, 3 formats each)
 └── *.html                    # Built pages
+
+.github/
+└── workflows/
+    └── build-deploy.yml     # CI/CD: builds on push, daily schedule, manual trigger
 ```
 
 ## Key Concepts
@@ -157,6 +162,33 @@ content: [
 - With proper content paths, only used classes are included
 - Result: Faster page loads, smaller bundle size
 
+### 6. Calendar Data Pipeline (`src/_data/calendar.js`)
+
+**Source:** Outlook 365 ICS feed (`smopc.org`)
+**Process:**
+1. Fetches public ICS feed via `node-ical`
+2. Expands recurring events using `rrule` within the date range
+3. Filters to next 21 days from build time
+4. Sorts by start date, returns max 4 events
+5. Pre-formats dates in `America/Detroit` timezone
+
+**Output fields:** `title`, `start`, `end`, `location`, `description`, `isAllDay`, `formattedDateTime`
+
+**Homepage widget** (`src/index.liquid`): Displays events in a sidebar card with spruce-green left border. Shows "No upcoming events scheduled" when empty. Links to full Outlook calendar.
+
+### 7. CI/CD Pipeline (`.github/workflows/build-deploy.yml`)
+
+**Deployment:** GitHub Actions → commits `_site/` to `master` → Cloudflare Pages auto-deploys
+
+**Triggers:**
+- **Push to `master`** (ignores `_site/**` changes to prevent loops)
+- **Daily cron** at 6:00 AM Eastern (11:00 UTC) — refreshes calendar/sermon data
+- **Manual** via GitHub Actions "Run workflow" button
+
+**Build steps:** Checkout → Node.js 22 → `npm ci` → `npm run build:prod` → check for `_site/` changes → commit with `[skip ci]` → push
+
+**Important:** The Action commits back to `master`. Always `git pull` before pushing local changes to avoid conflicts. You do not need to commit `_site/` locally.
+
 ## Common Tasks
 
 ### Add a New Page
@@ -228,8 +260,8 @@ If sermon scripture is missing or incorrect:
 
 ### Caching
 - Sermon RSS: 1-day cache in `.cache/` directory (delete to force refresh)
-- Calendar ICS: Cached separately
-- Clear all caches: `rm -rf .cache/`
+- Calendar ICS: Fetched fresh on each build (no local cache)
+- Clear sermon cache: `rm -rf .cache/`
 
 ### Tailwind CSS v4
 - **Config required**: `tailwind.config.js` with content paths for proper CSS purging
@@ -267,15 +299,6 @@ If sermon scripture is missing or incorrect:
 
 - RSS feed format changed or new field structure needed
 - Different image processing (aspect ratios, different sizes)
-- Calendar integration needs different logic (more than 7 days, different filtering)
+- Calendar ICS URL changed (update in `src/_data/calendar.js` and the "View Full Calendar" link in `src/index.liquid`)
 - Audio player behavior needs to change (autoplay, different UI, etc.)
-
-## Commit History
-
-Initial commits focused on:
-1. Sermon archive with RSS ingestion and filtering
-2. Scripture normalization and alphabetization
-3. Dynamic audio player implementation
-4. Mobile UI fixes (hamburger icon, hero images)
-5. Font system conversion to self-hosted
-6. Image optimization pipeline setup
+- GitHub Actions workflow needs modification (`.github/workflows/build-deploy.yml`)
