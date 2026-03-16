@@ -1,127 +1,94 @@
-# 11ty Starter Template
+# Spencer Mills OPC Website
 
-Barebones 11ty (Eleventy) starter with Tailwind CSS v4.
-
-## Features
-
-- **Tailwind CSS v4** - CDN for development, compiled for production
-- **Responsive images** - Automatic AVIF/WebP/JPEG via eleventy-img
-- **Dynamic icons** - Iconify icon sets loaded at build time
-- **HTML minification** - Production-only optimization
+Static website for Spencer Mills Orthodox Presbyterian Church, built with 11ty (Eleventy) and Tailwind CSS v4.
 
 ## Quick Start
 
 ```bash
 npm install
 npm run dev        # Start dev server (http://localhost:8080)
-npm run build:prod # Build for production
+npm run build:prod # Production build (CSS + HTML + images)
+npm run preview    # Build and serve locally on port 3000
 ```
+
+## Deployment
+
+The site is deployed via **Cloudflare Pages** from the `master` branch.
+
+### GitHub Actions CI/CD
+
+A GitHub Actions workflow (`.github/workflows/build-deploy.yml`) automates builds:
+
+| Trigger | When | Purpose |
+|---------|------|---------|
+| **Push to master** | Any source file change | Rebuild after content/template updates |
+| **Daily schedule** | 6:00 AM Eastern (11:00 UTC) | Refresh calendar data from ICS feed |
+| **Manual** | GitHub Actions tab > "Run workflow" | On-demand rebuild |
+
+**How it works:**
+1. Checks out `master`, installs deps, runs `npm run build:prod`
+2. If `_site/` changed, commits and pushes with `[skip ci]` to avoid loops
+3. Cloudflare Pages auto-deploys from the updated `master` branch
+
+**Note:** Since the Action commits `_site/` back to `master`, always `git pull` before pushing local changes to avoid conflicts.
+
+### Local Development Workflow
+
+1. Edit source files in `src/`
+2. Preview locally with `npm run dev` or `npm run preview`
+3. Push source changes to `master` — the Action handles building and deploying
+
+You do not need to commit `_site/` locally; the Action rebuilds it on every push.
 
 ## Project Structure
 
 ```
 src/
 ├── _data/
-│   └── site.js           # Site configuration
+│   ├── calendar.js      # ICS calendar feed (21-day lookahead, 4 events)
+│   ├── sermons.js       # SermonAudio RSS feed ingestion
+│   └── site.js          # Global site configuration
 ├── _includes/
 │   ├── layouts/
-│   │   └── base.liquid   # Base HTML template
-│   └── partials/
-│       └── icons.liquid  # Icon definitions
+│   │   └── base.liquid  # Base HTML template
+│   ├── header.liquid    # Navigation header
+│   └── footer.liquid    # Site footer
 ├── assets/
-│   ├── css/
-│   │   └── main.css      # Tailwind entry point
-│   ├── fonts/
-│   ├── img/
+│   ├── css/main.css     # Tailwind entry + brand theme
+│   ├── fonts/           # Self-hosted WOFF2 (Cormorant, Roboto)
+│   ├── images/          # Source images
 │   └── favicon/
-└── index.liquid          # Homepage
+├── index.liquid         # Homepage (hero, calendar widget, contact form)
+├── sermons.liquid       # Sermon archive with filtering
+├── beliefs.liquid       # Doctrinal beliefs
+├── leadership.liquid    # Leadership team
+├── contact.liquid       # Contact form
+├── give.liquid          # Giving page
+├── visitor.liquid       # Visitor info card
+└── the-opc.liquid       # OPC denomination info
+
+scripts/
+└── optimize-images.js   # Post-build AVIF/WebP/JPEG optimization
+
+.github/
+└── workflows/
+    └── build-deploy.yml # CI/CD pipeline
 ```
 
-## Tailwind CSS
+## Data Sources
 
-**Development:** Uses CDN script (no build step needed)
-
-**Production:** Compiled via `@tailwindcss/cli` with only used classes
-
-### Customizing Theme
-
-Edit `src/assets/css/main.css`:
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-primary: oklch(0.45 0.18 265);
-  --font-display: 'Your Font', serif;
-}
-```
-
-For development, mirror settings in `base.liquid`:
-
-```javascript
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: 'oklch(0.45 0.18 265)',
-      }
-    }
-  }
-}
-```
-
-## Icons
-
-Use the `{% icon %}` shortcode with Iconify:
-
-```liquid
-{% icon "lucide:check" %}           {# Default size (1em) #}
-{% icon "lucide:check", "sm" %}     {# 16px #}
-{% icon "lucide:check", "lg" %}     {# 32px #}
-{% icon "lucide:star", "text-yellow-500" %}
-```
-
-Browse icons at [icon-sets.iconify.design](https://icon-sets.iconify.design/)
-
-## Images
-
-Use the `{% image %}` shortcode for responsive images:
-
-```liquid
-{% image "/assets/img/photo.jpg", "Alt text" %}
-{% image "/assets/img/hero.jpg", "Hero", "(min-width: 768px) 50vw, 100vw", [400, 800, 1200], true %}
-```
-
-## Adding Pages
-
-Create a `.liquid` file in `src/`:
-
-```liquid
----
-layout: base
-title: Page Title
-description: SEO description
----
-
-<section class="py-16">
-  <div class="container mx-auto px-4">
-    <h1 class="text-4xl font-bold">Page Title</h1>
-  </div>
-</section>
-```
+| Data | Source | Refresh |
+|------|--------|---------|
+| **Calendar** | Outlook 365 ICS feed | Every build (daily via Action) |
+| **Sermons** | SermonAudio RSS feed | Every build (1-day cache via eleventy-fetch) |
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Dev server at localhost:8080 |
-| `npm run build` | Build site with CSS |
-| `npm run build:prod` | Production build (minified) |
+| `npm run dev` | Dev server at localhost:8080 with live reload |
+| `npm run build` | Build CSS + HTML |
+| `npm run build:prod` | Production build (minified HTML + image optimization) |
+| `npm run build:images` | Image optimization only |
+| `npm run preview` | Production build + serve on port 3000 |
 | `npm run clean` | Remove `_site/` |
-
-## Deployment
-
-Build output is in `_site/`. Deploy to any static host:
-
-- Build command: `npm run build:prod`
-- Output directory: `_site`
