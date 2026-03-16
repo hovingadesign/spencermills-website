@@ -3,15 +3,15 @@ import rrule from 'rrule';
 const { RRule } = rrule;
 
 export default async function() {
-  const CALENDAR_ICS_URL = 'https://outlook.office365.com/owa/calendar/7968b2c0fc1749959aa5c1ff78db8e87@lfcopc.org/68138daf3a834607ae3394f3497a07fa4237023610457132402/calendar.ics';
+  const CALENDAR_ICS_URL = 'https://outlook.office365.com/owa/calendar/538c36847685491abca604bee38d38cd@smopc.org/4c45c9f7638a4d698f37daa720157be74879970629639563496/calendar.ics';
 
   try {
     console.log('Fetching calendar events from ICS feed...');
     const events = await ical.async.fromURL(CALENDAR_ICS_URL);
 
-    // Calculate date range (next 7 days)
+    // Calculate date range (next 21 days)
     const now = new Date();
-    const sevenDaysFromNow = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+    const lookaheadEnd = new Date(now.getTime() + (21 * 24 * 60 * 60 * 1000));
 
     const eventList = [];
 
@@ -22,7 +22,7 @@ export default async function() {
       if (event.rrule) {
         try {
           const rrule = event.rrule;
-          const dates = rrule.between(now, sevenDaysFromNow, true);
+          const dates = rrule.between(now, lookaheadEnd, true);
 
           // Add each occurrence within the date range
           for (const date of dates) {
@@ -51,7 +51,7 @@ export default async function() {
         // Single event
         const eventDate = event.start;
         if (!eventDate) continue;
-        if (eventDate < now || eventDate > sevenDaysFromNow) continue;
+        if (eventDate < now || eventDate > lookaheadEnd) continue;
 
         const isAllDay = event.datetype === 'date';
         eventList.push({
@@ -69,10 +69,10 @@ export default async function() {
       }
     }
 
-    // Sort by start date and limit to 7 events
+    // Sort by start date and limit to next 4 events
     const sortedEvents = eventList
       .sort((a, b) => a.start - b.start)
-      .slice(0, 7);
+      .slice(0, 4);
 
     console.log(`✓ Loaded ${sortedEvents.length} upcoming events`);
 
