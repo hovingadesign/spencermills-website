@@ -1,18 +1,20 @@
 /**
  * Sermons Data
  *
- * Fetches sermon data from a podcast RSS feed at build time.
+ * Fetches sermon data from the Substack podcast RSS feed at build time.
  * The feed is cached for 1 day to avoid excessive requests.
  *
- * Configure the feed URL below for your church's podcast feed.
+ * Substack feed format differs from SermonAudio:
+ * - Duration is in seconds (not H:MM:SS)
+ * - Speaker/author is in dc:creator (not itunes:author per-item)
+ * - Scripture references are embedded in description HTML
  */
 
 import EleventyFetch from "@11ty/eleventy-fetch";
 import Parser from "rss-parser";
 
-// Configure your sermon feed URL here
-// SermonAudio format: https://feed.sermonaudio.com/broadcasters/YOUR_ID
-const SERMON_FEED_URL = "https://feed.sermonaudio.com/broadcasters/lfc";
+// Spencer Mills OPC Substack podcast feed
+const SERMON_FEED_URL = "https://api.substack.com/feed/podcast/8351868.rss";
 
 // Cache duration - how long to cache the feed before refetching
 const CACHE_DURATION = "1d";
@@ -165,21 +167,71 @@ function normalizeScripture(text) {
 }
 
 /**
+ * Extract scripture reference from Substack description HTML.
+ * Substack descriptions contain HTML like: <p>Acts 2:42-47 Sermon</p>
+ * We extract the scripture reference from the first text content.
+ */
+function extractScriptureFromDescription(description) {
+  if (!description) return "";
+
+  // Strip HTML tags to get plain text
+  const plainText = description.replace(/<[^>]*>/g, "").trim();
+  if (!plainText) return "";
+
+  // Match scripture patterns: "Book Chapter:Verse" or "Book Chapter:Verse-Verse"
+  // Handles numbered books (1 John, 2 Kings, etc.)
+  const scripturePattern = /(\d?\s?[A-Za-z]+(?:\s+of\s+[A-Za-z]+)?)\s+(\d+(?::\d+(?:\s*[-–]\s*\d+(?::\d+)?)?)?)/;
+  const match = plainText.match(scripturePattern);
+
+  if (match) {
+    return match[0].trim();
+  }
+
+  return "";
+}
+
+/**
  * Extract book name for filtering/grouping
  */
 function extractBook(scripture) {
   if (!scripture) return "";
   // Match book name (including numbered books like "1 Corinthians")
-  const match = scripture.match(/^(\d?\s?[A-Za-z]+)/);
+  const match = scripture.match(/^(\d?\s?[A-Za-z]+(?:\s+of\s+[A-Za-z]+)?)/);
   return match ? match[1].trim() : "";
 }
 
 /**
- * Parse duration string (H:MM:SS or MM:SS) to seconds
+ * Format seconds into MM:SS or H:MM:SS display string
  */
-function parseDuration(durationStr) {
-  if (!durationStr) return 0;
-  const parts = durationStr.split(":").map(Number);
+function formatDuration(totalSeconds) {
+  if (!totalSeconds || totalSeconds <= 0) return "";
+  const num = typeof totalSeconds === "string" ? parseInt(totalSeconds, 10) : totalSeconds;
+  if (isNaN(num) || num <= 0) return "";
+
+  const hours = Math.floor(num / 3600);
+  const minutes = Math.floor((num % 3600) / 60);
+  const seconds = num % 60;
+
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+/**
+ * Parse duration - handles both seconds (Substack) and H:MM:SS (SermonAudio)
+ */
+function parseDurationToSeconds(durationVal) {
+  if (!durationVal) return 0;
+  const str = String(durationVal).trim();
+
+  // If it's just a number (seconds from Substack)
+  if (/^\d+$/.test(str)) {
+    return parseInt(str, 10);
+  }
+
+  // H:MM:SS or MM:SS format
+  const parts = str.split(":").map(Number);
   if (parts.length === 3) {
     return parts[0] * 3600 + parts[1] * 60 + parts[2];
   } else if (parts.length === 2) {
@@ -201,14 +253,15 @@ function formatDate(dateStr) {
 }
 
 export default async function () {
-  // Configure the RSS parser with iTunes namespace fields
+  // Configure the RSS parser with iTunes and DC namespace fields
   const parser = new Parser({
     customFields: {
       item: [
         ["itunes:duration", "duration"],
-        ["itunes:author", "speaker"],
+        ["itunes:author", "itunesAuthor"],
         ["itunes:subtitle", "subtitle"],
         ["itunes:image", "image", { keepArray: false }],
+        ["dc:creator", "creator"],
       ],
     },
   });
@@ -225,27 +278,34 @@ export default async function () {
 
     // Process and return sermon items
     const sermons = feed.items.map((item, index) => {
-      // Scripture reference is in the content field (not description)
-      const scripture = item.content || item.description || "";
-      const normalizedScripture = normalizeScripture(scripture);
+      // Extract scripture from description HTML (Substack format)
+      const scriptureRaw = extractScriptureFromDescription(item.contentSnippet || item.content || item.description || "");
+      const normalizedScripture = normalizeScripture(scriptureRaw);
       const book = extractBook(normalizedScripture);
+
+      // Speaker: prefer per-item creator, fall back to itunes:author or channel author
+      const speaker = item.creator || item.itunesAuthor || feed.itunes?.author || "Spencer Mills OPC";
+
+      // Duration: Substack gives seconds, SermonAudio gives H:MM:SS
+      const durationSeconds = parseDurationToSeconds(item.duration);
+      const durationDisplay = formatDuration(durationSeconds);
 
       const dateObj = new Date(item.pubDate);
 
       return {
         id: index,
         title: item.title || "Untitled Sermon",
-        speaker: item.speaker || "Unknown Speaker",
+        speaker: speaker,
         date: item.pubDate,
         dateFormatted: formatDate(item.pubDate),
         isoDate: item.isoDate || dateObj.toISOString(),
         year: dateObj.getFullYear(),
-        scripture: scripture,
+        scripture: scriptureRaw,
         scriptureNormalized: normalizedScripture,
         book: book,
         series: item.subtitle || "",
-        duration: item.duration || "",
-        durationSeconds: parseDuration(item.duration),
+        duration: durationDisplay,
+        durationSeconds: durationSeconds,
         audioUrl: item.enclosure?.url || "",
         link: item.link || "",
         guid: item.guid || item.link || `sermon-${index}`,

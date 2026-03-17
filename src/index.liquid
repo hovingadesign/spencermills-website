@@ -65,11 +65,10 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
         <p class="text-navy/80 leading-relaxed mb-6">
           Hear past sermons from our pastor and guest speakers in our Sermon Archive.
         </p>
-        <p class="text-navy/60 text-sm italic">Coming soon</p>
-        <!-- <a href="/sermons/" class="inline-flex items-center gap-2 text-spruce uppercase tracking-widest text-sm hover:underline transition-colors group">
+        <a href="/sermons/" class="inline-flex items-center gap-2 text-spruce uppercase tracking-widest text-sm hover:underline transition-colors group">
           Sermons
           <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
-        </a> -->
+        </a>
       </div>
 
       <!-- Column 2: Church Life -->
@@ -98,9 +97,6 @@ description: Spencer Mills is a vibrant, confessionally Reformed church in Gowen
               <time class="text-sm text-navy/70 block mt-1">
                 {{ event.formattedDateTime }}
               </time>
-              {% if event.location %}
-                <p class="text-sm text-navy/60 mt-1">{{ event.location }}</p>
-              {% endif %}
             </li>
             {% endfor %}
           </ul>

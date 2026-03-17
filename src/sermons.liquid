@@ -15,13 +15,13 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
 <section class="py-12 lg:py-16 bg-off-white">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
     <p class="text-navy/80 leading-relaxed mb-8">
-      Listen to past sermons from our pastor and guest speakers. Use the filters below to search by speaker, Scripture passage, or year.
+      Listen to past sermons from our pastor and guest speakers. Use the filters below to search by title, Scripture passage, or year.
     </p>
 
     {% if sermons.items.size > 0 %}
     <!-- Filters -->
     <div class="bg-white shadow-sm p-4 sm:p-6 mb-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <!-- Search -->
         <div>
           <label for="sermon-search" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Search</label>
@@ -31,17 +31,6 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
             placeholder="Search sermons..."
             class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-navy placeholder-navy/40 focus:outline-none focus:border-spruce transition-colors text-sm"
           >
-        </div>
-
-        <!-- Speaker Filter -->
-        <div>
-          <label for="filter-speaker" class="block text-xs uppercase tracking-widest text-navy/70 mb-2">Speaker</label>
-          <select id="filter-speaker" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-navy focus:outline-none focus:border-spruce transition-colors text-sm">
-            <option value="">All Speakers</option>
-            {% for speaker in sermons.meta.speakers %}
-            <option value="{{ speaker }}">{{ speaker }}</option>
-            {% endfor %}
-          </select>
         </div>
 
         <!-- Scripture Filter -->
@@ -83,7 +72,6 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
       {% for sermon in sermons.items %}
       <article
         class="sermon-item bg-white shadow-sm overflow-hidden transition-shadow hover:shadow-md"
-        data-speaker="{{ sermon.speaker }}"
         data-book="{{ sermon.book }}"
         data-year="{{ sermon.year }}"
         data-title="{{ sermon.title | downcase }}"
@@ -94,12 +82,9 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
           <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
             <div class="flex-1 min-w-0">
               <h2 class="font-display text-xl sm:text-2xl text-navy truncate">{{ sermon.title }}</h2>
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-navy/70">
-                <span>{{ sermon.speaker }}</span>
-                {% if sermon.scriptureNormalized != "" %}
-                <span class="text-spruce">{{ sermon.scriptureNormalized }}</span>
-                {% endif %}
-              </div>
+              {% if sermon.scriptureNormalized != "" %}
+              <div class="mt-1 text-sm text-spruce">{{ sermon.scriptureNormalized }}</div>
+              {% endif %}
             </div>
             <div class="text-sm text-navy/50 whitespace-nowrap">
               {{ sermon.dateFormatted }}
@@ -139,7 +124,7 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
               rel="noopener noreferrer"
               class="text-xs text-spruce hover:underline inline-flex items-center gap-1"
             >
-              View on SermonAudio
+              View on Substack
               {% icon "lucide:external-link", "size-3" %}
             </a>
             {% endif %}
@@ -180,7 +165,6 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
 (function() {
   // --- Filtering ---
   const searchInput = document.getElementById('sermon-search');
-  const speakerFilter = document.getElementById('filter-speaker');
   const bookFilter = document.getElementById('filter-book');
   const yearFilter = document.getElementById('filter-year');
   const clearButton = document.getElementById('clear-filters');
@@ -191,29 +175,25 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
 
   function filterSermons() {
     const searchTerm = searchInput.value.toLowerCase().trim();
-    const speaker = speakerFilter.value;
     const book = bookFilter.value;
     const year = yearFilter.value;
 
     let visibleCount = 0;
-    const hasFilters = searchTerm || speaker || book || year;
+    const hasFilters = searchTerm || book || year;
 
     sermonItems.forEach(item => {
-      const itemSpeaker = item.dataset.speaker;
       const itemBook = item.dataset.book;
       const itemYear = item.dataset.year;
       const itemTitle = item.dataset.title;
       const itemScripture = item.dataset.scripture;
 
-      const matchesSpeaker = !speaker || itemSpeaker === speaker;
       const matchesBook = !book || itemBook === book;
       const matchesYear = !year || itemYear === year;
       const matchesSearch = !searchTerm ||
         itemTitle.includes(searchTerm) ||
-        itemScripture.includes(searchTerm) ||
-        itemSpeaker.toLowerCase().includes(searchTerm);
+        itemScripture.includes(searchTerm);
 
-      if (matchesSpeaker && matchesBook && matchesYear && matchesSearch) {
+      if (matchesBook && matchesYear && matchesSearch) {
         item.classList.remove('hidden');
         visibleCount++;
       } else {
@@ -229,14 +209,12 @@ description: Listen to past sermons from our pastor and guest speakers at Spence
 
   function clearFilters() {
     searchInput.value = '';
-    speakerFilter.value = '';
     bookFilter.value = '';
     yearFilter.value = '';
     filterSermons();
   }
 
   searchInput.addEventListener('input', filterSermons);
-  speakerFilter.addEventListener('change', filterSermons);
   bookFilter.addEventListener('change', filterSermons);
   yearFilter.addEventListener('change', filterSermons);
   clearButton.addEventListener('click', clearFilters);
