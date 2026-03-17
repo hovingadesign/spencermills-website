@@ -17,12 +17,13 @@ npm run build:images   # Image optimization script (runs after build:prod)
 
 This is an 11ty (Eleventy) static site with Tailwind CSS v4 using **ES modules** (not CommonJS), featuring:
 
-1. **Sermon Archive**: Dynamic RSS feed ingestion from SermonAudio with automatic filtering
+1. **Sermon Archive**: Dynamic RSS feed ingestion from Substack podcast with automatic filtering
 2. **Responsive Images**: Automatic next-gen optimization (AVIF/WebP/JPEG) across 4 breakpoints (400w-1600w)
 3. **Dynamic Audio Players**: Lazy-loaded audio elements that initialize on button click
 4. **Self-Hosted Assets**: All fonts and images served locally (no external CDN)
 5. **Church Calendar**: 21-day event lookahead from Outlook 365 ICS feed (displays next 4 events)
-6. **CI/CD**: GitHub Actions pipeline with scheduled daily rebuilds for fresh calendar data
+6. **CI/CD**: GitHub Actions pipeline with scheduled daily rebuilds for fresh calendar/sermon data
+7. **Notification Banner**: Build-time conditional banner configured in `site.js`
 
 ## ES Modules Configuration
 
@@ -43,16 +44,16 @@ tailwind.config.js           # Tailwind v4 content paths for CSS purging
 
 src/
 ├── _data/
-│   ├── sermons.js           # RSS feed ingestion, scripture normalization, filtering data
+│   ├── sermons.js           # Substack podcast RSS feed ingestion, scripture normalization
 │   ├── calendar.js          # Outlook 365 ICS calendar (21-day lookahead, max 4 events)
-│   └── site.js              # Global configuration
+│   └── site.js              # Global configuration (includes notification banner config)
 ├── _includes/
 │   └── header.liquid        # Navigation header with inline SVG hamburger
 ├── assets/
 │   ├── css/
 │   │   └── main.css         # Tailwind import + @font-face declarations
 │   └── fonts/               # Local WOFF2 files (Cormorant, Roboto)
-├── sermons.liquid           # Sermon archive with 4-way filtering UI
+├── sermons.liquid           # Sermon archive with 3-way filtering UI (search, scripture, year)
 ├── beliefs.liquid           # Beliefs page (tall hero image: h-[32rem] sm:h-[40rem])
 └── index.liquid             # Homepage (Live Stream button: text-spruce)
 
@@ -75,19 +76,24 @@ _site/                        # Build output (in git, built by GitHub Actions)
 
 ### 1. Sermon Data Pipeline (`src/_data/sermons.js`)
 
+**Source:** Substack podcast RSS feed (`https://api.substack.com/feed/podcast/8351868.rss`)
+
 **Process:**
-1. Fetches SermonAudio RSS feed via @11ty/eleventy-fetch with 1-day cache
-2. Maps RSS fields: `content` → scripture references, `pubDate` → date, `enclosure.url` → audio URL
+1. Fetches Substack podcast RSS feed via @11ty/eleventy-fetch with 1-day cache
+2. Extracts scripture references from `description` HTML (e.g., `<p>Acts 2:42-47 Sermon</p>`)
 3. Normalizes scripture references to full book names (Genesis, Ephesians, etc.)
-4. Extracts unique speaker names, book names, and years for filter dropdowns
-5. Alphabetizes all filter values with custom sort for numbered books (1 John before 2 John)
+4. Converts duration from seconds (Substack format) to display string (MM:SS or H:MM:SS)
+5. Extracts unique book names and years for filter dropdowns
 6. Returns array of sermon objects with metadata for template rendering
 
-**Important Field Mapping:**
-- Scripture is in `item.content` (not `description`)
-- Audio URL is in `item.enclosure.url`
-- Duration is in `item.itunes:duration`
-- Speaker is extracted from title (e.g., "Speaker Name - Title")
+**Substack Field Mapping:**
+- Scripture: extracted from `description` HTML via regex pattern matching
+- Audio URL: `item.enclosure.url`
+- Duration: `itunes:duration` (in seconds, converted to MM:SS for display)
+- Speaker: `dc:creator` (currently "Spencer Mills OPC" — not displayed in UI)
+
+**Filters:** Search (title/scripture text), Scripture (book dropdown), Year
+- No speaker filter (Substack doesn't support per-item speaker names)
 
 **Scripture Normalization:**
 - Maps all Bible book variations to canonical names (gen, genesis, Gen → Genesis)
@@ -174,15 +180,31 @@ content: [
 
 **Output fields:** `title`, `start`, `end`, `location`, `description`, `isAllDay`, `formattedDateTime`
 
-**Homepage widget** (`src/index.liquid`): Displays events in a sidebar card with spruce-green left border. Shows "No upcoming events scheduled" when empty. Links to full Outlook calendar.
+**Homepage widget** (`src/index.liquid`): Displays events in a sidebar card with spruce-green left border (title + date/time only, no location). Shows "No upcoming events scheduled" when empty. Links to full Outlook calendar.
 
-### 7. CI/CD Pipeline (`.github/workflows/build-deploy.yml`)
+### 7. Notification Banner (`src/_data/site.js`)
+
+**Build-time banner** rendered via Liquid conditional in `base.liquid`. No client-side JavaScript.
+
+**Configuration** in `site.js` → `notification` object:
+```javascript
+notification: {
+  enabled: true,           // Show/hide the banner
+  message: "Your message", // Banner text
+  link: "/page/",          // Optional link URL
+  linkText: "Learn more"   // Optional link text
+}
+```
+
+To enable: set `enabled: true` + `message` in `site.js`, push to master → CI rebuilds and deploys.
+
+### 8. CI/CD Pipeline (`.github/workflows/build-deploy.yml`)
 
 **Deployment:** GitHub Actions → commits `_site/` to `master` → Cloudflare Pages auto-deploys
 
 **Triggers:**
 - **Push to `master`** (ignores `_site/**` changes to prevent loops)
-- **Daily cron** at 6:00 AM Eastern (11:00 UTC) — refreshes calendar/sermon data
+- **Daily cron** at 6:00 AM Eastern (11:00 UTC) — refreshes calendar events and sermon feed from Substack
 - **Manual** via GitHub Actions "Run workflow" button
 
 **Build steps:** Checkout → Node.js 22 → `npm ci` → `npm run build:prod` → check for `_site/` changes → commit with `[skip ci]` → push
@@ -205,9 +227,10 @@ content: [
 
 ### Update Sermon Feed URL
 
-1. Edit `src/_data/sermons.js` line ~15: Change `FEED_URL` constant
+1. Edit `src/_data/sermons.js` line ~18: Change `SERMON_FEED_URL` constant
 2. Clear cache: Delete `.cache/` directory
 3. Rebuild: `npm run build`
+4. Note: Current feed is Substack podcast format (duration in seconds, scripture in description HTML)
 
 ### Change Image Optimization Settings
 
@@ -225,9 +248,10 @@ content: [
 ### Debug Scripture Extraction
 
 If sermon scripture is missing or incorrect:
-1. Check RSS feed in browser: https://www.sermonaudio.com/rss.xml (or applicable feed URL)
-2. Search for scripture in `<content>` field (not `description`)
-3. If field is different, update `src/_data/sermons.js` field mapping
+1. Check RSS feed in browser: `https://api.substack.com/feed/podcast/8351868.rss`
+2. Scripture is extracted from `<description>` HTML via regex (e.g., `<p>Acts 2:42-47 Sermon</p>`)
+3. The pattern expects `Book Chapter:Verse` format — non-standard formats may not match
+4. If extraction fails, check `extractScriptureFromDescription()` in `src/_data/sermons.js`
 
 ## Known Issues and Fixes
 
@@ -297,7 +321,7 @@ If sermon scripture is missing or incorrect:
 
 ## When to Contact Developers
 
-- RSS feed format changed or new field structure needed
+- Substack RSS feed format changed or new field structure needed
 - Different image processing (aspect ratios, different sizes)
 - Calendar ICS URL changed (update in `src/_data/calendar.js` and the "View Full Calendar" link in `src/index.liquid`)
 - Audio player behavior needs to change (autoplay, different UI, etc.)
