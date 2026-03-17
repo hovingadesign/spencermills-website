@@ -29,6 +29,14 @@ export default {
     evening: "5:00pm"
   },
 
+  // Site-wide notification banner (rendered at build time)
+  notification: {
+    enabled: false,
+    message: "",
+    link: "",
+    linkText: ""
+  },
+
   // Build timestamp
   buildTime: new Date().toISOString()
 };
