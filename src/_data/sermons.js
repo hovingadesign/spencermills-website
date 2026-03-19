@@ -16,8 +16,8 @@ import Parser from "rss-parser";
 // Spencer Mills OPC Substack podcast feed
 const SERMON_FEED_URL = "https://api.substack.com/feed/podcast/8351868.rss";
 
-// Cache duration - how long to cache the feed before refetching
-const CACHE_DURATION = "1d";
+// Cache duration - always fetch fresh in CI, cache locally for dev speed
+const CACHE_DURATION = process.env.CI ? "0s" : "1d";
 
 /**
  * Normalize scripture references with full book names.
