@@ -26,3 +26,9 @@ npm-debug.log*
 # Cache
 .cache/
 .icon-cache.json
+
+# Local agent / tooling state
+.claude/
+.forge/
+CLAUDE.md
+CLAUDE.md.old
