@@ -7,7 +7,7 @@
 export default {
   title: "Spencer Mills Orthodox Presbyterian Church",
   description: "Spencer Mills is a vibrant, confessionally Reformed church in Gowen, MI that seeks to make disciples of Jesus Christ who worship God with great joy.",
-  url: process.env.URL || "https://spencermillsopc.org",
+  url: process.env.URL || "https://smopc.org",
 
   // Contact Information
   phone: "616.754.7832",
