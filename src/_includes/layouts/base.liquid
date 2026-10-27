@@ -7,6 +7,7 @@
   <!-- SEO Meta -->
   <title>{{ title | default: site.title }}</title>
   <meta name="description" content="{{ description | default: site.description }}">
+  {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
 
   <!-- Open Graph -->
   <meta property="og:title" content="{{ title | default: site.title }}">

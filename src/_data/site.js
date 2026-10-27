@@ -20,7 +20,9 @@ export default {
 
   // Social Media
   social: {
-    facebook: "https://www.facebook.com/profile.php?id=100064328726036"
+    facebook: "https://www.facebook.com/profile.php?id=100064328726036",
+    applePodcasts: "https://podcasts.apple.com/us/podcast/spencer-mills-opc-podcast/id1886211997",
+    spotify: "https://open.spotify.com/show/0348JTGG09YerC5ZxGH29f"
   },
 
   // Service Times
